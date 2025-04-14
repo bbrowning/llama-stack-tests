@@ -117,7 +117,6 @@ jobs:
           cp artifacts/verification_report.md openai-api-verification/$(date -Idate).md
 
       - name: Push new reports
-        working-directorty: ./llama-stack-tests
         run: |
           git config --global user.name "Ben Browning"
           git config --global user.email "bbrownin@redhat.com"
