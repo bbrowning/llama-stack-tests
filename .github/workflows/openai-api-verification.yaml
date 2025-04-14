@@ -54,6 +54,11 @@ jobs:
       - name: Run Llama Stack
         run: |
           uv run llama stack run --image-type venv --port 8321 tests/verifications/openai-api-verification-run.yaml &
+        env:
+          FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
 
       - name: Wait for Llama Stack to come up
         run: |
@@ -62,6 +67,11 @@ jobs:
       - name: Run verification tests
         run: |
           uv run -- pytest -s -v tests/verification/openai_api/test_chat_completion.py --provider=together-llama-stack
+        env:
+          FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
 
   verification-workflow-complete:
     needs: ["verification"]
