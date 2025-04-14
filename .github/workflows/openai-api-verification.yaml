@@ -58,9 +58,9 @@ jobs:
         run: |
           uv run -- pytest -s -v tests/verification/openai_api/test_chat_completion.py --provider=together-llama-stack
 
-  test-workflow-complete:
-    needs: ["test"]
+  verification-workflow-complete:
+    needs: ["verification"]
     runs-on: ubuntu-latest
     steps:
-      - name: Test Workflow Complete
-        run: echo "Test Workflow Complete"
+      - name: Verification Workflow Complete
+        run: echo "Verification Workflow Complete"
