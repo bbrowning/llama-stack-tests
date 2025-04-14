@@ -4,6 +4,8 @@ name: OpenAI API Verification
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "21 11 * * *"
 
 env:
   LC_ALL: en_US.UTF-8
@@ -73,6 +75,13 @@ jobs:
           python tests/verifications/generate_report.py \
             --run-tests \
             --providers together \
+                        fireworks \
+                        groq \
+                        openai \
+                        together-llama-stack \
+                        fireworks-llama-stack \
+                        groq-llama-stack \
+                        openai-llama-stack \
             --output verification_report.md
           # Fail the step if we don't see any results in the generated report
           cat verification_report.md | grep "Generated on"
