@@ -68,7 +68,8 @@ jobs:
 
       - name: Run verification tests
         run: |
-          uv run -- pytest -s -v tests/verification/openai_api/test_chat_completion.py --provider=together-llama-stack
+          source .venv/bin/activate
+          python -m pytest -s -v tests/verification/openai_api/test_chat_completion.py --provider=together-llama-stack
         env:
           FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
