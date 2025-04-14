@@ -1,0 +1,66 @@
+# SPDX-License-Identifier: Apache-2.0
+
+name: OpenAI API Verification
+
+on:
+  workflow_dispatch:
+
+env:
+  LC_ALL: en_US.UTF-8
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+
+jobs:
+  verification:
+    name: openai-api-verification
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Harden Runner"
+        uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+        with:
+          egress-policy: audit # TODO: change to 'egress-policy: block' after couple of runs
+
+      - name: Checkout meta-llama/llama-stack
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: "meta-llama/llama-stack"
+          ref: "main"
+          # https://github.com/actions/checkout/issues/249
+          fetch-depth: 0
+
+      - name: Setup Python 3.10
+        uses: actions/setup-python@8d9ed9ac5c53483de85588cdf95a591a75ab9f55 # v5.5.0
+        with:
+          python-version: 3.10
+          cache: pip
+          cache-dependency-path: |
+            **/pyproject.toml
+            **/requirements*.txt
+            **/uv.lock
+
+      - name: Install dependencies
+        run: |
+          export UV_PYTHON_PREFERENCE=only-system
+          python -m pip install uv
+          uv sync --extra dev
+          uv pip install -e .
+
+      - name: Run Llama Stack
+        run: |
+          uv run llama stack run --image-type venv tests/verifications/openai-api-verification-run.yaml
+
+      - name: Run verification tests
+        run: |
+          uv run -- pytest -s -v tests/verification/openai_api/test_chat_completion.py --provider=together-llama-stack
+
+  test-workflow-complete:
+    needs: ["test"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test Workflow Complete
+        run: echo "Test Workflow Complete"
