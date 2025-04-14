@@ -69,7 +69,7 @@ jobs:
       - name: Run verification tests
         run: |
           source .venv/bin/activate
-          python -m pytest -s -v tests/verification/openai_api/test_chat_completion.py --provider=together-llama-stack
+          python tests/verifications/generate_report.py --run-tests --providers together together-llama-stack --output verification_report.md
         env:
           FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
