@@ -49,6 +49,8 @@ jobs:
           python -m pip install uv
           uv sync --extra dev
           uv pip install -e .
+          uv run llama stack build --template fireworks --image-type venv
+          uv run llama stack build --template groq --image-type venv
           uv run llama stack build --template together --image-type venv
 
       - name: Run Llama Stack
