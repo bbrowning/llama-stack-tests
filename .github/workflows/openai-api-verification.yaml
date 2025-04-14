@@ -70,7 +70,17 @@ jobs:
       - name: Run verification tests
         run: |
           source .venv/bin/activate
-          python tests/verifications/generate_report.py --run-tests --providers together together-llama-stack --output verification_report.md
+          python tests/verifications/generate_report.py \
+            --run-tests \
+            --providers together \
+                        fireworks \
+                        groq \
+                        openai \
+                        together-llama-stack \
+                        fireworks-llama-stack \
+                        groq-llama-stack \
+                        openai-llama-stack \
+            --output verification_report.md
           # Fail the step if we don't see any results in the generated report
           cat verification_report.md | grep "Generated on"
           # Add the verification report to the step summary
