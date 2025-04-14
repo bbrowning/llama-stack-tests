@@ -49,6 +49,7 @@ jobs:
           python -m pip install uv
           uv sync --extra dev
           uv pip install -e .
+          uv pip install pytest-json-report
           uv run llama stack build --template fireworks --image-type venv
           uv run llama stack build --template groq --image-type venv
           uv run llama stack build --template together --image-type venv
@@ -70,6 +71,8 @@ jobs:
         run: |
           source .venv/bin/activate
           python tests/verifications/generate_report.py --run-tests --providers together together-llama-stack --output verification_report.md
+          # Fail the step if we don't see any results in the generated report
+          cat verification_report.md | grep "Generated on"
         env:
           FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
