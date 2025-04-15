@@ -1,2 +1,8 @@
-# llama-stack-tests
-This repository regularly runs some Llama Stack verification tests.
+# Llama Stack Verification Tests
+
+This repository regularly runs the OpenAI API verification tests from
+Llama Stack.
+
+You can always find the latest results here:
+
+*[Latest Results](/openai-api-verification/latest.md)*
