@@ -5,4 +5,4 @@ Llama Stack.
 
 You can always find the latest results here:
 
-*[Latest Results](/openai-api-verification/latest.md)*
+**[Latest Results](/openai-api-verification/latest.md)**
