@@ -70,7 +70,7 @@ jobs:
         run: |
           source .venv/bin/activate
           mkdir -p tests/verifications/test_results/
-          cp in_tree_results/openai-api-verification/raw_results/*.json tests/verifications/test_results/
+          cp in_tree_results/openai-api-verification/raw_results/latest/*.json tests/verifications/test_results/
           cp vllm_results/openai-api-verification/latest/*.json tests/verifications/test_results/
 
           python tests/verifications/generate_report.py \
