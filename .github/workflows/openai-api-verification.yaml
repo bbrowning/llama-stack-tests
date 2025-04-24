@@ -74,6 +74,9 @@ jobs:
           source .venv/bin/activate
           mkdir -p tests/verifications/test_results
 
+          # Clear out any results from the upstream Llama Stack repo
+          rm tests/verifications/test_results/*.json
+
           for provider in together fireworks groq openai together-llama-stack fireworks-llama-stack groq-llama-stack openai-llama-stack; do
             python -m pytest -s -v tests/verifications/openai_api/test_chat_completion.py --provider="${provider}" --json-report --json-report-file="tests/verifications/test_results/${provider}.json" || echo "some ${provider} verification tests failed"
           done
