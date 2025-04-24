@@ -1,0 +1,68 @@
+# SPDX-License-Identifier: Apache-2.0
+
+name: Aggregate Raw Results
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "22 02 * * *"
+
+env:
+  LC_ALL: en_US.UTF-8
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+
+jobs:
+  aggregate-results:
+    name: aggregate-results
+    runs-on: ubuntu-latest
+    permissions:
+      # allow pushing to the github repo
+      contents: write
+    steps:
+      - name: Checkout this repo
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          ref: "main"
+          # https://github.com/actions/checkout/issues/249
+          fetch-depth: 0
+
+      - name: Checkout vllm results
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: "instructlab/lls-openai-client"
+          ref: "main"
+          path: vllm_results
+
+      - name: Add the new verification results
+        run: |
+          TODAY="$(date -Idate)"
+          export TODAY
+          ls -l vllm_results/
+          mkdir -p openai-api-verification/raw_results/latest
+          mkdir -p "openai-api-verification/raw_results/${TODAY}"
+          cp vllm_results/openai-api-verification/latest/*.json openai-api-verification/raw_results/latest/
+          cp vllm_results/openai-api-verification/latest/*.json "openai-api-verification/raw_results/${TODAY}/"
+
+      - name: Push new results
+        run: |
+          git config --global user.name "Ben Browning"
+          git config --global user.email "bbrownin@redhat.com"
+
+          git add openai-api-verification
+          git commit -m "Aggregated verification results for $(date -Idate)"
+          git push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  workflow-complete:
+    needs: ["aggregate-results"]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Workflow Complete
+        run: echo "Workflow Complete"
