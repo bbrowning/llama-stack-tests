@@ -63,6 +63,10 @@ jobs:
         run: |
           source .venv/bin/activate
           mkdir -p tests/verifications/test_results/
+
+          # Clear out any results from the upstream Llama Stack repo
+          rm tests/verifications/test_results/*.json
+
           cp test_results/openai-api-verification/raw_results/latest/*.json tests/verifications/test_results/
 
           providers="$(ls test_results/openai-api-verification/raw_results/latest | sed 's/.json$//' | paste -sd ' ')"
