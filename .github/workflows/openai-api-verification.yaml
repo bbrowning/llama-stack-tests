@@ -110,7 +110,7 @@ jobs:
           name: openai-api-verification-results
           path: artifacts
 
-      - name: Add the new verification report
+      - name: Add the new verification results
         run: |
           TODAY="$(date -Idate)"
           export TODAY
