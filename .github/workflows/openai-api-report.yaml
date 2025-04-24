@@ -65,7 +65,7 @@ jobs:
           mkdir -p tests/verifications/test_results/
           cp test_results/openai-api-verification/raw_results/latest/*.json tests/verifications/test_results/
 
-          providers="$(ls openai-api-verification/raw_results/latest | sed 's/.json$//' | paste -sd ' ')"
+          providers="$(ls test_results/openai-api-verification/raw_results/latest | sed 's/.json$//' | paste -sd ' ')"
           echo "Generating report for providers: ${providers}"
           python tests/verifications/generate_report.py \
             --providers $providers \
