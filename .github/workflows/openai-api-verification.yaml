@@ -58,16 +58,13 @@ jobs:
 
       - name: Run Llama Stack
         run: |
-          uv run llama stack run --image-type venv --port 8321 tests/verifications/openai-api-verification-run.yaml &
+          uv run llama stack run --image-type venv --port 8321 tests/verifications/openai-api-verification-run.yaml 2>&1 | tee llama_stack.log &
+          curl --retry-connrefused --retry 5 --retry-delay 3 http://localhost:8321/v1/openai/v1/models
         env:
           FIREWORKS_API_KEY: ${{ secrets.FIREWORKS_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           TOGETHER_API_KEY: ${{ secrets.TOGETHER_API_KEY }}
-
-      - name: Wait for Llama Stack to come up
-        run: |
-          curl --retry-connrefused --retry 5 --retry-delay 3 http://localhost:8321/v1/openai/v1/models
 
       - name: Run verification tests
         run: |
@@ -76,6 +73,8 @@ jobs:
 
           # Clear out any results from the upstream Llama Stack repo
           rm tests/verifications/test_results/*.json
+
+          tail -f llama_stack.log &
 
           for provider in together fireworks groq openai together-llama-stack fireworks-llama-stack groq-llama-stack openai-llama-stack; do
             python -m pytest -s -v tests/verifications/openai_api/test_chat_completion.py --provider="${provider}" --json-report --json-report-file="tests/verifications/test_results/${provider}.json" || echo "some ${provider} verification tests failed"
