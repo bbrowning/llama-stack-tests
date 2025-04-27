@@ -56,6 +56,10 @@ jobs:
           uv run llama stack build --template groq --image-type venv
           uv run llama stack build --template together --image-type venv
 
+          # Temporarily pin litellm to 1.67.2 or lower
+          # See https://github.com/meta-llama/llama-stack/issues/2043
+          uv pip install "litellm<=1.67.2"
+
       - name: Run Llama Stack
         run: |
           uv run llama stack run --image-type venv --port 8321 tests/verifications/openai-api-verification-run.yaml 2>&1 | tee llama_stack.log &
