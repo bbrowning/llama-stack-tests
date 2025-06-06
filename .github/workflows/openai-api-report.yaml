@@ -49,7 +49,7 @@ jobs:
         run: |
           export UV_PYTHON_PREFERENCE=only-system
           python -m pip install uv
-          uv sync --extra dev
+          uv sync --group dev
           uv pip install -e .
           uv pip install pytest-json-report
 
